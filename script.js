@@ -47,6 +47,12 @@ async function Juego() {
 
     document.addEventListener("keypress", function (e) {
         let tecla = e.key.toUpperCase();
+        if (!letrasValidas.includes(tecla)) {
+            mostrarModal("", `La letra ${tecla} no es válida`, ()=>{
+                modal.style.display = "none"
+            })
+            return;
+        }
         if (letrasUsadas.includes(tecla)){
             mostrarModal("", `Ya usaste la letra ${tecla}`, ()=>{
                 modal.style.display = "none"
