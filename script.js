@@ -1,18 +1,21 @@
 const palabraActualContenedor = document.querySelector("#letras");
-// Boton iniciar juego 
 const botonIniciar = document.querySelector("#iniciar");
 const juegoContenedor = document.querySelector(".juego");
 const modal = document.querySelector(".modal");
 const letrasUsadasContenedor = document.querySelector("#letras-usadas");
-
-botonIniciar.onclick = function () {
-    juegoContenedor.style.display = "flex";
-    botonIniciar.style.display = "none";
-}
+const controles = document.querySelector(".controles");
+const areaNuevasPalabras = document.querySelector("#nuevas-palabras");
 
 var letrasValidas = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-shapeStart();
 
+function obtenerNuevaPalabra() {
+    let todasLasPalabras = [...JSON.parse(localStorage.getItem("palabras-usuario")||"[]"), ...bancoDePalabras];
+    let longitud = todasLasPalabras.length;
+    let palabraAleatoria = todasLasPalabras[Math.floor(Math.random() * longitud)].toUpperCase();
+    return palabraAleatoria;
+}
+/*
+ FUNCIÓN QUE USA UNA API
 async function obtenerNuevaPalabra() {
     let palabraValida = false;
     var palabra = "";
@@ -28,7 +31,7 @@ async function obtenerNuevaPalabra() {
         }
     }
     return palabra;
-}
+}*/
 
 function mostrarModal(titulo="", mensaje="", cb=(()=>window.location.assign(""))){
     modal.querySelector("#titulo").textContent = titulo;
@@ -38,6 +41,8 @@ function mostrarModal(titulo="", mensaje="", cb=(()=>window.location.assign(""))
 }
 
 async function Juego() {
+    shapeStart();
+    let gameState = "playing";
     var palabra = await obtenerNuevaPalabra();
     var letras = palabra.split("");
     var letrasAdivinadas = [];
@@ -46,6 +51,7 @@ async function Juego() {
     palabraActualContenedor.textContent = palabraActual;
 
     document.addEventListener("keypress", function (e) {
+        if (gameState !== "playing") return;
         let tecla = e.key.toUpperCase();
         if (!letrasValidas.includes(tecla)) {
             mostrarModal("", `La letra ${tecla} no es válida`, ()=>{
@@ -72,16 +78,42 @@ async function Juego() {
                 shapes.shift()();
             }else if(shapes.length === 1) {
                 shapes.shift()();
-                mostrarModal("Perdiste", `La palabra era ${palabra}`)
+                mostrarModal("Perdiste", `La palabra era ${palabra}`);
+                gameState = "over";
             }
             else {
-                mostrarModal("Perdiste", `La palabra era ${palabra}`)
+                mostrarModal("Perdiste", `La palabra era ${palabra}`);
+                gameState = "over";
             }
         }
         if(palabraActual?.replaceAll(" ","") === palabra) {
-            mostrarModal("¡Ganaste!", `La palabra es ${palabra}`)
+            mostrarModal("¡Ganaste!", `La palabra es ${palabra}`);
+            gameState = "won";
         }
     })
 }
 
-Juego();
+
+botonIniciar.onclick = function () {
+    // INICIAR JUEGO
+    Juego();
+
+    // ESCONDER INPUTS Y PONER EL JUEGO
+    juegoContenedor.style.display = "flex";
+    controles.style.display = "none";
+
+    // AGREGAR PALABRAS DEL USUARIO
+    var nuevasPalabras = areaNuevasPalabras.value.toUpperCase().replaceAll(" ","").split(",");
+    if ((nuevasPalabras.length > 0) && (nuevasPalabras[0] !== "")) {
+
+
+        let palabrasUsuario =  JSON.parse(localStorage.getItem("palabras-usuario")||"[]");
+        let interseccion = [
+            ...bancoDePalabras.filter(pl=>nuevasPalabras.includes(pl.toUpperCase())),
+            ...palabrasUsuario.filter(pl=>nuevasPalabras.includes(pl.toUpperCase()))
+        ];
+        let sinRepeticiones = nuevasPalabras.filter(pl=>!interseccion.includes(pl));
+        if (sinRepeticiones.length > 0) localStorage.setItem("palabras-usuario", JSON.stringify(palabrasUsuario.concat(sinRepeticiones)))
+
+    }
+}   
