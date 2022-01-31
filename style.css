@@ -97,7 +97,6 @@ canvas {
 
 @media (max-width: 900px) {
   .juego {
-    display: flex;
     flex-wrap: wrap;
   }
   canvas {
