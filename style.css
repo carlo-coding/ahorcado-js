@@ -6,6 +6,8 @@
 }
 body {
   position: relative;
+  padding: 0 1rem 100px;
+  padding-bottom: 100px;
   min-height: 100vh;
 }
 .container {
@@ -92,6 +94,31 @@ canvas {
   flex-direction: column;
   gap: 10px;
   text-align: center;
+}
+
+.mobile-control {
+  display: none;
+}
+
+.mobile-control input {
+  all: initial;
+  font: inherit;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  border: 1px solid #000000;
+}
+
+@media (max-width: 700px) {
+  .mobile-control {
+    display: flex;
+    max-height: 40px;
+    gap: 10px;
+    margin: 1em 0;
+  }
+
+  .juego > div {
+    padding: 0;
+  }
 }
 
 

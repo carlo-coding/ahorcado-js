@@ -6,6 +6,8 @@ const letrasUsadasContenedor = document.querySelector("#letras-usadas");
 const controles = document.querySelector(".controles");
 const areaNuevasPalabras = document.querySelector("#nuevas-palabras");
 
+const inputMobile = document.querySelector("#mobile-input");
+
 var letrasValidas = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
 
 function obtenerNuevaPalabra() {
@@ -14,6 +16,12 @@ function obtenerNuevaPalabra() {
     let palabraAleatoria = todasLasPalabras[Math.floor(Math.random() * longitud)].toUpperCase();
     return palabraAleatoria;
 }
+
+inputMobile.addEventListener("keypress", ()=> {
+    setTimeout(()=> {
+        inputMobile.value = "";
+    }, 170);
+})
 /*
  FUNCIÓN QUE USA UNA API
 async function obtenerNuevaPalabra() {
