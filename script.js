@@ -17,7 +17,8 @@ function obtenerNuevaPalabra() {
     return palabraAleatoria;
 }
 
-inputMobile.addEventListener("keydown", ()=> {
+
+inputMobile.addEventListener("touchstart", ()=> {
     setTimeout(()=> {
         inputMobile.value = "";
     }, 170);
