@@ -18,7 +18,7 @@ function obtenerNuevaPalabra() {
 }
 
 
-inputMobile.addEventListener("touchstart", ()=> {
+inputMobile.addEventListener("input", ()=> {
     setTimeout(()=> {
         inputMobile.value = "";
     }, 170);
@@ -58,10 +58,18 @@ async function Juego() {
     var letrasUsadas = [];
     var palabraActual = letras.map(letra => letrasAdivinadas.includes(letra)?` ${letra} `:" _ ").join("");
     palabraActualContenedor.textContent = palabraActual;
+    var isMobile = window.matchMedia("(max-width: 600px)").matches
 
-    document.addEventListener("keydown", function (e) {
+
+    function probarLetra(e) {
         if (gameState !== "playing") return;
-        let tecla = e.key.toUpperCase();
+
+        let tecla = "";
+        if (isMobile) {
+            tecla = e.data?.toUpperCase();
+        }else {
+            tecla = e.key.toUpperCase();
+        }
         if (!letrasValidas.includes(tecla)) {
             mostrarModal("", `La letra ${tecla} no es válida`, ()=>{
                 modal.style.display = "none"
@@ -99,7 +107,13 @@ async function Juego() {
             mostrarModal("¡Ganaste!", `La palabra es ${palabra}`);
             gameState = "won";
         }
-    })
+    }
+
+    if (isMobile) {
+        document.addEventListener("input", probarLetra);
+    }else {
+        document.addEventListener("keydown", probarLetra);
+    }
 }
 
 
