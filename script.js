@@ -17,7 +17,7 @@ function obtenerNuevaPalabra() {
     return palabraAleatoria;
 }
 
-inputMobile.addEventListener("keypress", ()=> {
+inputMobile.addEventListener("keydown", ()=> {
     setTimeout(()=> {
         inputMobile.value = "";
     }, 170);
@@ -58,7 +58,7 @@ async function Juego() {
     var palabraActual = letras.map(letra => letrasAdivinadas.includes(letra)?` ${letra} `:" _ ").join("");
     palabraActualContenedor.textContent = palabraActual;
 
-    document.addEventListener("keypress", function (e) {
+    document.addEventListener("keydown", function (e) {
         if (gameState !== "playing") return;
         let tecla = e.key.toUpperCase();
         if (!letrasValidas.includes(tecla)) {
